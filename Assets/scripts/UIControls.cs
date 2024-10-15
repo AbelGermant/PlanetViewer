@@ -98,7 +98,7 @@ public class UIControls : MonoBehaviour
 
     public void Backward()
     {
-        PlanetManager.current.SetDeltaDays(-1);
+        PlanetManager.current.SetDeltaDays(-4);
         BPause.gameObject.SetActive(true);
         BPlay.gameObject.SetActive(false);
     }
