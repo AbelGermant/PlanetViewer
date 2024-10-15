@@ -31,8 +31,6 @@ public class SolarSystemController : MonoBehaviour
 
     public Dictionary<PlanetData.Planet, GameObject> planetGameObjects = new Dictionary<PlanetData.Planet, GameObject>();
 
-    private DateTime currentTime;
-
     void Start()
     {
         // Add all the planets to the dictionary
@@ -45,25 +43,23 @@ public class SolarSystemController : MonoBehaviour
         planetGameObjects.Add(PlanetData.Planet.Uranus, uranus);
         planetGameObjects.Add(PlanetData.Planet.Neptune, neptune);
 
-        // Set the current time to the current time
-        currentTime = DateTime.Now;
+        PlanetManager.current.OnTimeChange += UpdatePosition;
+
     }
 
     void Update()
     {
-        UpdatePlanetPositions();
+
     }
 
-    public void UpdatePlanetPositions()
+
+    public void UpdatePosition(DateTime t)
     {
         // Loop through all the planets
         foreach (KeyValuePair<PlanetData.Planet, GameObject> planet in planetGameObjects)
         {
-            Vector3 position = PlanetData.GetPlanetPosition(planet.Key, currentTime);
+            Vector3 position = PlanetData.GetPlanetPosition(planet.Key, t);
             planet.Value.transform.position = position;
         }
-
-        // Increment the time
-        currentTime = currentTime.AddDays(1);
     }
 }
