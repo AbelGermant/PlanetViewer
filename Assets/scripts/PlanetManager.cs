@@ -9,6 +9,8 @@ public class PlanetManager : MonoBehaviour
     [SerializeField]
     private UDateTime date;
 
+    private int deltaDays = 1;
+
 
 
 
@@ -32,7 +34,7 @@ public class PlanetManager : MonoBehaviour
 
     void Update()
     {
-        Date = Date.dateTime.AddDays(1);
+        Date = Date.dateTime.AddDays(deltaDays);
     }
 
 
@@ -51,5 +53,15 @@ public class PlanetManager : MonoBehaviour
             date = value;
             TimeChanged(value.dateTime); //Fire the event
         }
+    }
+
+    public void SetDate(DateTime newDate)
+    {
+        Date = newDate;
+    }
+
+    public void SetDeltaDays(int days)
+    {
+        deltaDays = days;
     }
 }

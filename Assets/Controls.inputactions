@@ -1,0 +1,34 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "UI",
+            "id": "0020656a-30f7-4bf3-b686-6753ca29a2e8",
+            "actions": [
+                {
+                    "name": "SetScaleToRealist",
+                    "type": "Button",
+                    "id": "0f8d40ad-fbaa-4ed4-8aa2-909d2eefcfb2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "28a084eb-af77-4312-9077-c24016c56a6a",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetScaleToRealist",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

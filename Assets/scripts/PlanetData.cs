@@ -8,6 +8,17 @@ public static class PlanetData
     public enum Planet { Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune }
     public enum KeplerParameter { a, e, I, L, longPeri, longNode, b, c, s, f}
 
+    public static Dictionary<Planet, int> daysInYear = new Dictionary<Planet, int>(){
+        {Planet.Mercury, 88},
+        {Planet.Venus, 225},
+        {Planet.Earth, 365},
+        {Planet.Mars, 687},
+        {Planet.Jupiter, 4333},
+        {Planet.Saturn, 10759},
+        {Planet.Uranus, 30687},
+        {Planet.Neptune, 60190}
+    };
+
     /// <summary>
     /// Get planet coordinates at a given time (in AU)
     /// </summary>
@@ -17,7 +28,7 @@ public static class PlanetData
     public static Vector3 GetPlanetPosition(Planet p, DateTime t)
     {
         float T = (float)(t-new DateTime(2000,1,1)).TotalDays/36525f;
-        float a = GetKeplerParameter(p, KeplerParameter.a)[0] 
+        float a = GetKeplerParameter(p, KeplerParameter.a)[0]
             + (GetKeplerParameter(p, KeplerParameter.a)[1] * T);
         float longPeri = GetKeplerParameter(p, KeplerParameter.longPeri)[0]
                     + (GetKeplerParameter(p, KeplerParameter.longPeri)[1] * T);
@@ -46,7 +57,7 @@ public static class PlanetData
         {
             //deltaM = M - E + (e_star * Mathf.Sin((float)(Mathf.Deg2Rad*E)));
             //deltaE = deltaM / (1 - (e_star * Mathf.Cos((float)(Mathf.Deg2Rad*E))));
-            
+
             // Don't know why the serie do not converge with order 2 term (see above)
             // Using only order 1 term instead
             deltaE = M - E + (e_star * Mathf.Sin((float)(Mathf.Deg2Rad * E)));
@@ -56,11 +67,11 @@ public static class PlanetData
 
         float x_prime = a * (Mathf.Cos((float)(Mathf.Deg2Rad * E)) - e);
         float y_prime = a * Mathf.Sqrt(1 - e * e) * Mathf.Sin((float)(Mathf.Deg2Rad*E));
-        
+
         float incl = GetKeplerParameter(p, KeplerParameter.I)[0]
                     + (GetKeplerParameter(p, KeplerParameter.I)[1] * T);
 
-        return new Vector3((Mathf.Cos(Mathf.Deg2Rad * peri) * Mathf.Cos(Mathf.Deg2Rad * longNode) - Mathf.Sin(Mathf.Deg2Rad * peri) * Mathf.Sin(Mathf.Deg2Rad * longNode) * Mathf.Cos(Mathf.Deg2Rad * incl)) * x_prime 
+        return new Vector3((Mathf.Cos(Mathf.Deg2Rad * peri) * Mathf.Cos(Mathf.Deg2Rad * longNode) - Mathf.Sin(Mathf.Deg2Rad * peri) * Mathf.Sin(Mathf.Deg2Rad * longNode) * Mathf.Cos(Mathf.Deg2Rad * incl)) * x_prime
             + (-Mathf.Sin(Mathf.Deg2Rad * peri) * Mathf.Cos(Mathf.Deg2Rad * longNode) - Mathf.Cos(Mathf.Deg2Rad * peri) * Mathf.Sin(Mathf.Deg2Rad * longNode) * Mathf.Cos(Mathf.Deg2Rad * incl)) * y_prime,
             (Mathf.Cos(Mathf.Deg2Rad * peri) * Mathf.Sin(Mathf.Deg2Rad * longNode) + Mathf.Sin(Mathf.Deg2Rad * peri) * Mathf.Cos(Mathf.Deg2Rad * longNode) * Mathf.Cos(Mathf.Deg2Rad * incl)) * x_prime
             + (-Mathf.Sin(Mathf.Deg2Rad * peri) * Mathf.Sin(Mathf.Deg2Rad * longNode) + Mathf.Cos(Mathf.Deg2Rad * peri) * Mathf.Cos(Mathf.Deg2Rad * longNode) * Mathf.Cos(Mathf.Deg2Rad * incl)) * y_prime,
