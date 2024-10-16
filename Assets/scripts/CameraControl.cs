@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CameraControl : MonoBehaviour
@@ -23,7 +24,7 @@ public class CameraControl : MonoBehaviour
 
     public InputActionReference leftClick;    // Reference for the left-click action
     public InputActionReference RightClick;    // Reference for the right-click action
-    public InputActionReference scrollWheel;  // Reference for the scroll action (optional if used for zooming)
+    public InputActionReference ScrollWheel;  // Reference for the scroll action (optional if used for zooming)
 
     public GameObject sun;
 
@@ -34,6 +35,8 @@ public class CameraControl : MonoBehaviour
     private bool isPanning = false;
     private bool isRotating = false;
 
+    private bool haveParent = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +45,7 @@ public class CameraControl : MonoBehaviour
         // Enable input actions
         leftClick.action.Enable();
         RightClick.action.Enable();
-        scrollWheel.action.Enable();
+        ScrollWheel.action.Enable();
 
         // Subscribe to the left-click started and canceled events
         leftClick.action.started += OnLeftClickStarted;
@@ -51,7 +54,7 @@ public class CameraControl : MonoBehaviour
         RightClick.action.started += OnRightClickStarted;
         RightClick.action.canceled += onRightClickCanceled;
 
-        scrollWheel.action.performed += context => {
+        ScrollWheel.action.performed += context => {
             // zoom
             Vector2 zoom = context.ReadValue<Vector2>();
             // multiply by the distance between the camera and the sun
@@ -102,8 +105,52 @@ public class CameraControl : MonoBehaviour
     // Triggered when the left-click starts (button pressed)
     private void OnLeftClickStarted(InputAction.CallbackContext context)
     {
-        isPanning = true;
-        lastMousePositionLeft = Mouse.current.position.ReadValue();  // Store initial mouse position
+        // check if click is on planet
+        if (Physics.Raycast(cam.ScreenPointToRay(Mouse.current.position.ReadValue()), out RaycastHit hit))
+        {
+
+            // check if object in SolarSystemController planetGameObjects
+            if (SolarSystemController.current.planetGameObjects.ContainsValue(hit.collider.gameObject))
+            {
+                // Set the camera's to follow the planet
+                cam.transform.position = hit.collider.transform.position + new Vector3(0, 0, -3);
+                cam.transform.LookAt(hit.collider.transform);
+
+                // attach the camera to the planet
+                cam.transform.parent = hit.collider.transform;
+                haveParent = true;
+
+                // get the planet
+                foreach (KeyValuePair<PlanetData.Planet, GameObject> planet in SolarSystemController.current.planetGameObjects)
+                {
+                    if (planet.Value == hit.collider.gameObject)
+                    {
+                        UIControls.current.ShowInfo(planet.Key);
+                    }
+                }
+            }
+        }
+        // check if click in on UI
+        else if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+        else
+        {
+            if(haveParent)
+            {
+                cam.transform.parent = null;
+                haveParent = false;
+                UIControls.current.HideInfo();
+            }
+            isPanning = true;
+            lastMousePositionLeft = Mouse.current.position.ReadValue();  // Store initial mouse position
+        }
+
+
+
+
+
     }
 
     // Triggered when the left-click is canceled (button released)
@@ -134,13 +181,16 @@ public class CameraControl : MonoBehaviour
 
         leftClick.action.Disable();
         RightClick.action.Disable();
-        scrollWheel.action.Disable();
+        ScrollWheel.action.Disable();
     }
 
     public void CenterCamera()
     {
         cam.transform.position = new Vector3(-10, 0, -30);
         cam.transform.eulerAngles = new Vector3(0, 0, 0);
+        cam.transform.parent = null;
+        haveParent = false;
+        UIControls.current.HideInfo();
     }
 }
 

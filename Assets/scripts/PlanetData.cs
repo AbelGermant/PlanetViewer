@@ -16,7 +16,7 @@ public static class PlanetData
         {Planet.Jupiter, 4333},
         {Planet.Saturn, 10759},
         {Planet.Uranus, 30687},
-        {Planet.Neptune, 60190}
+        {Planet.Neptune, 61000}
     };
 
     /// <summary>

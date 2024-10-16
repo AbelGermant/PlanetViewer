@@ -98,10 +98,10 @@ public class SolarSystemController : MonoBehaviour
         foreach (KeyValuePair<PlanetData.Planet, GameObject> planet in planetGameObjects)
         {
             LineRenderer lineRenderer = planet.Value.GetComponent<LineRenderer>();
-            int ndaysInYear = PlanetData.daysInYear[planet.Key]*2;
-            lineRenderer.positionCount = ndaysInYear;
+            int ndaysInYear = PlanetData.daysInYear[planet.Key];
+            lineRenderer.positionCount = ndaysInYear+10;
 
-            for (int i = 0; i < ndaysInYear; i++)
+            for (int i = 0; i < ndaysInYear +10; i++)
             {
                 Vector3 position = PlanetData.GetPlanetPosition(planet.Key, new DateTime(2000, 1, 1).AddDays(i));
                 lineRenderer.SetPosition(i, position);

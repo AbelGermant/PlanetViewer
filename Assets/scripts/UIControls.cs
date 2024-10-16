@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UI.Dates;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -15,6 +17,8 @@ public class UIControls : MonoBehaviour
     public Button BPlay;
     public Button BBackward;
     public Button BForward;
+
+    public TextMeshProUGUI InfoText;
 
     private void Awake()
     {
@@ -115,4 +119,28 @@ public class UIControls : MonoBehaviour
     {
         CameraControl.current.CenterCamera();
     }
+
+    public void ShowInfo(PlanetData.Planet planet)
+    {
+        InfoText.gameObject.SetActive(true);
+        InfoText.text = planetInfo[planet];
+    }
+
+    public void HideInfo()
+    {
+        InfoText.gameObject.SetActive(false);
+        InfoText.text = "";
+    }
+
+    private Dictionary<PlanetData.Planet, String> planetInfo = new Dictionary<PlanetData.Planet, String>()
+    {
+        {PlanetData.Planet.Mercury, "Mercury is the smallest planet in the Solar System and the closest to the Sun."},
+        {PlanetData.Planet.Venus, "Venus is the second planet from the Sun and the hottest planet in the Solar System."},
+        {PlanetData.Planet.Earth, "Earth is the third planet from the Sun and the only planet known to have life."},
+        {PlanetData.Planet.Mars, "Mars is the fourth planet from the Sun and the second smallest planet in the Solar System."},
+        {PlanetData.Planet.Jupiter, "Jupiter is the fifth planet from the Sun and the largest planet in the Solar System."},
+        {PlanetData.Planet.Saturn, "Saturn is the sixth planet from the Sun and the second largest planet in the Solar System."},
+        {PlanetData.Planet.Uranus, "Uranus is the seventh planet from the Sun and the third largest planet in the Solar System."},
+        {PlanetData.Planet.Neptune, "Neptune is the eighth planet from the Sun and the fourth largest planet in the Solar System."}
+    };
 }

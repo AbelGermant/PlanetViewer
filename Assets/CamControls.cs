@@ -53,6 +53,15 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""click"",
+                    ""type"": ""Button"",
+                    ""id"": ""7cbc4e41-db8d-4768-aa84-6678e4d0d109"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +97,17 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
                     ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea9cb6a1-3ec5-4ddf-9c56-5899a4f5555d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +119,7 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
         m_Camera_LeftClick = m_Camera.FindAction("LeftClick", throwIfNotFound: true);
         m_Camera_scroll = m_Camera.FindAction("scroll", throwIfNotFound: true);
         m_Camera_RightClick = m_Camera.FindAction("RightClick", throwIfNotFound: true);
+        m_Camera_click = m_Camera.FindAction("click", throwIfNotFound: true);
     }
 
     ~@CamControls()
@@ -168,6 +189,7 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_LeftClick;
     private readonly InputAction m_Camera_scroll;
     private readonly InputAction m_Camera_RightClick;
+    private readonly InputAction m_Camera_click;
     public struct CameraActions
     {
         private @CamControls m_Wrapper;
@@ -175,6 +197,7 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
         public InputAction @LeftClick => m_Wrapper.m_Camera_LeftClick;
         public InputAction @scroll => m_Wrapper.m_Camera_scroll;
         public InputAction @RightClick => m_Wrapper.m_Camera_RightClick;
+        public InputAction @click => m_Wrapper.m_Camera_click;
         public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -193,6 +216,9 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
             @RightClick.started += instance.OnRightClick;
             @RightClick.performed += instance.OnRightClick;
             @RightClick.canceled += instance.OnRightClick;
+            @click.started += instance.OnClick;
+            @click.performed += instance.OnClick;
+            @click.canceled += instance.OnClick;
         }
 
         private void UnregisterCallbacks(ICameraActions instance)
@@ -206,6 +232,9 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
             @RightClick.started -= instance.OnRightClick;
             @RightClick.performed -= instance.OnRightClick;
             @RightClick.canceled -= instance.OnRightClick;
+            @click.started -= instance.OnClick;
+            @click.performed -= instance.OnClick;
+            @click.canceled -= instance.OnClick;
         }
 
         public void RemoveCallbacks(ICameraActions instance)
@@ -228,5 +257,6 @@ public partial class @CamControls: IInputActionCollection2, IDisposable
         void OnLeftClick(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
         void OnRightClick(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }
