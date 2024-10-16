@@ -48,6 +48,8 @@ public class SolarSystemController : MonoBehaviour
         DrawOrbit();
         HideOrbit();
 
+        SetScaleToBig();
+
     }
 
     void Update()
@@ -82,15 +84,24 @@ public class SolarSystemController : MonoBehaviour
     public void SetScaleToBig()
     {
         sun.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        mercury.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        venus.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        earth.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        mars.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-        jupiter.transform.localScale = new Vector3(1f, 1f, 1f);
-        saturn.transform.localScale = new Vector3(1f, 1f, 1f);
-        uranus.transform.localScale = new Vector3(1f, 1f, 1f);
-        neptune.transform.localScale = new Vector3(1f, 1f, 1f);
+        foreach (KeyValuePair<PlanetData.Planet, GameObject> planet in planetGameObjects)
+        {
+            float scale = planetScale[planet.Key]*0.5f;
+            planet.Value.transform.localScale = new Vector3(scale, scale, scale);
+        }
     }
+
+    private Dictionary<PlanetData.Planet, float> planetScale = new Dictionary<PlanetData.Planet, float>()
+    {
+        {PlanetData.Planet.Mercury, 0.1f},
+        {PlanetData.Planet.Venus, 0.248f},
+        {PlanetData.Planet.Earth, 0.261f},
+        {PlanetData.Planet.Mars, 0.1389f},
+        {PlanetData.Planet.Jupiter, 2.865f},
+        {PlanetData.Planet.Saturn, 2.387f},
+        {PlanetData.Planet.Uranus, 1.039f},
+        {PlanetData.Planet.Neptune, 1f}
+    };
 
     public void DrawOrbit()
     {
