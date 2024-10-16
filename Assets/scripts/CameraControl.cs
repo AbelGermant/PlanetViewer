@@ -5,9 +5,27 @@ using UnityEngine.InputSystem;
 
 public class CameraControl : MonoBehaviour
 {
+
+    public static CameraControl current;
+
+    private void Awake()
+    {
+        if (current == null)
+        {
+            current = this;
+        }
+        else
+        {
+            Destroy(obj: this);
+        }
+    }
+
+
     public InputActionReference leftClick;    // Reference for the left-click action
     public InputActionReference RightClick;    // Reference for the right-click action
     public InputActionReference scrollWheel;  // Reference for the scroll action (optional if used for zooming)
+
+    public GameObject sun;
 
     public Camera cam;
 
@@ -36,7 +54,8 @@ public class CameraControl : MonoBehaviour
         scrollWheel.action.performed += context => {
             // zoom
             Vector2 zoom = context.ReadValue<Vector2>();
-            float zoomAmount = zoom.y*0.01f;
+            // multiply by the distance between the camera and the sun
+            float zoomAmount = zoom.y * (cam.transform.position - sun.transform.position).magnitude * 0.001f;
             // direction of the camera
             Vector3 direction = cam.transform.forward;
             // move the camera
@@ -53,20 +72,30 @@ public class CameraControl : MonoBehaviour
             Vector3 currentMousePosition = Mouse.current.position.ReadValue();
             Vector3 mouseDelta = currentMousePosition - lastMousePositionLeft;
 
-            // get camera direction
-            Vector3 direction = cam.transform.forward;
-            
-
+            // Calculate the pan movement based on the camera's right and up directions
+            Vector3 panMovement = cam.transform.right * mouseDelta.x * 0.05f + cam.transform.up * mouseDelta.y * 0.05f;
+            // multiply by the distance between the camera and the sun
+            panMovement *= (cam.transform.position - sun.transform.position).magnitude*0.03f;
+            // Apply the pan movement
+            cam.transform.position -= panMovement;
 
             lastMousePositionLeft = currentMousePosition;
         }
 
+        // Rotate the camera when right-click is held and the mouse is moving
         if (isRotating)
         {
             Vector3 currentMousePosition = Mouse.current.position.ReadValue();
             Vector3 mouseDelta = currentMousePosition - lastMousePositionRight;
-            Vector3 rotate = new Vector3(-mouseDelta.y, mouseDelta.x, 0) * Time.deltaTime;
-            cam.transform.Rotate(rotate, Space.World);
+
+            // Calculate the rotation angles
+            float rotationX = mouseDelta.y * 0.1f; // Vertical mouse movement rotates around the X axis
+            float rotationY = mouseDelta.x * 0.1f; // Horizontal mouse movement rotates around the Y axis
+
+            // Apply the rotations
+            cam.transform.eulerAngles -= new Vector3(-rotationX, rotationY, 0);
+
+            lastMousePositionRight = currentMousePosition;
         }
     }
 
@@ -106,6 +135,12 @@ public class CameraControl : MonoBehaviour
         leftClick.action.Disable();
         RightClick.action.Disable();
         scrollWheel.action.Disable();
+    }
+
+    public void CenterCamera()
+    {
+        cam.transform.position = new Vector3(-10, 0, -30);
+        cam.transform.eulerAngles = new Vector3(0, 0, 0);
     }
 }
 

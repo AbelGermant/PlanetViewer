@@ -109,4 +109,10 @@ public class UIControls : MonoBehaviour
         BPause.gameObject.SetActive(true);
         BPlay.gameObject.SetActive(false);
     }
+
+
+    public void CenterCamera()
+    {
+        CameraControl.current.CenterCamera();
+    }
 }
