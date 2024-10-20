@@ -110,12 +110,13 @@ public class SolarSystemController : MonoBehaviour
         {
             LineRenderer lineRenderer = planet.Value.GetComponent<LineRenderer>();
             int ndaysInYear = PlanetData.daysInYear[planet.Key];
-            lineRenderer.positionCount = ndaysInYear+10;
+            lineRenderer.positionCount = 0;
 
-            for (int i = 0; i < ndaysInYear +10; i++)
+            for (int i = 0; i < ndaysInYear +10; i += (int)(ndaysInYear/100)+1)
             {
                 Vector3 position = PlanetData.GetPlanetPosition(planet.Key, new DateTime(2000, 1, 1).AddDays(i));
-                lineRenderer.SetPosition(i, position);
+                lineRenderer.positionCount++;
+                lineRenderer.SetPosition(i/((int)(ndaysInYear/100)+1), position);
             }
         }
     }
